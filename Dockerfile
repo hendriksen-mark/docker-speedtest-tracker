@@ -4,6 +4,7 @@
 FROM alpine:latest AS source
 
 ARG RELEASE_TAG="latest"
+ARG SOURCE_REPOSITORY="alexjustesen/speedtest-tracker"
 
 WORKDIR /src
 
@@ -13,16 +14,16 @@ RUN apk add --no-cache wget jq
 # Fetch the appropriate release
 RUN set -e; \
     if [ "${RELEASE_TAG}" = "current" ]; then \
-        wget https://github.com/alexjustesen/speedtest-tracker/archive/refs/heads/main.tar.gz \
+        wget https://github.com/${SOURCE_REPOSITORY}/archive/refs/heads/main.tar.gz \
         && tar -xzvf main.tar.gz --strip-components=1 \
         && rm main.tar.gz; \
     elif [ "${RELEASE_TAG}" = "latest" ]; then \
-        LATEST_RELEASE=$(wget -q -O - https://api.github.com/repos/alexjustesen/speedtest-tracker/releases/latest | jq -r .tag_name) \
-        && wget https://github.com/alexjustesen/speedtest-tracker/archive/refs/tags/${LATEST_RELEASE}.tar.gz \
+        LATEST_RELEASE=$(wget -q -O - https://api.github.com/repos/${SOURCE_REPOSITORY}/releases/latest | jq -r .tag_name) \
+        && wget https://github.com/${SOURCE_REPOSITORY}/archive/refs/tags/${LATEST_RELEASE}.tar.gz \
         && tar -xzvf ${LATEST_RELEASE}.tar.gz --strip-components=1 \
         && rm ${LATEST_RELEASE}.tar.gz; \
     else \
-        wget https://github.com/alexjustesen/speedtest-tracker/archive/refs/tags/${RELEASE_TAG}.tar.gz \
+        wget https://github.com/${SOURCE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz \
         && tar -xzvf ${RELEASE_TAG}.tar.gz --strip-components=1 \
         && rm ${RELEASE_TAG}.tar.gz; \
     fi

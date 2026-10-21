@@ -12,6 +12,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SOURCE_REPOSITORY: ${{ github.repository_owner }}/speedtest-tracker
 
 jobs:
   build-and-push:
@@ -29,7 +30,7 @@ jobs:
       - name: Determine latest upstream release tag
         id: release-tag
         run: |
-          RELEASE_TAG=$(curl -sf https://api.github.com/repos/alexjustesen/speedtest-tracker/releases/latest | jq -r .tag_name)
+          RELEASE_TAG=$(curl -sf "https://api.github.com/repos/${SOURCE_REPOSITORY}/releases/latest" | jq -r .tag_name)
           if [ -z "${RELEASE_TAG}" ] || [ "${RELEASE_TAG}" = "null" ]; then
             echo "Failed to resolve latest release tag"
             exit 1
@@ -69,6 +70,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             RELEASE_TAG=${{ steps.release-tag.outputs.release_tag }}
+            SOURCE_REPOSITORY=${{ env.SOURCE_REPOSITORY }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: true
