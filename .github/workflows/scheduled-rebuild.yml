@@ -71,6 +71,7 @@ jobs:
           build-args: |
             RELEASE_TAG=${{ steps.release-tag.outputs.release_tag }}
             SOURCE_REPOSITORY=${{ env.SOURCE_REPOSITORY }}
+            BUILD_VERSION=${{ steps.release-tag.outputs.release_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: true

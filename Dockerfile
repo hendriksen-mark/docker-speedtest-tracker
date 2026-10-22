@@ -75,9 +75,13 @@ LABEL org.opencontainers.image.title="speedtest-tracker-docker" \
     org.opencontainers.image.authors="Alex Justesen (@alexjustesen)"
 
 ARG LIBRESPEED_CLI_VERSION="1.0.12" \
-    OOKLA_CLI_VERSION="1.2.0"
+    OOKLA_CLI_VERSION="1.2.0" \
+    SOURCE_REPOSITORY="alexjustesen/speedtest-tracker" \
+    BUILD_VERSION="v1.13.10"
 
-ENV AUTORUN_ENABLED="true" \
+ENV BUILD_VERSION="${BUILD_VERSION}" \
+    SPEEDTEST_GITHUB_REPOSITORY="${SOURCE_REPOSITORY}" \
+    AUTORUN_ENABLED="true" \
     PHP_OPCACHE_ENABLE="1" \
     SHOW_WELCOME_MESSAGE="false"
 

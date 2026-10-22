@@ -55,6 +55,7 @@ jobs:
           build-args: |
             RELEASE_TAG=latest
             SOURCE_REPOSITORY=${{ env.SOURCE_REPOSITORY }}
+            BUILD_VERSION=dev
           cache-from: type=gha,scope=amd64
           cache-to: type=gha,mode=max,scope=amd64
 
@@ -109,6 +110,7 @@ jobs:
           build-args: |
             RELEASE_TAG=latest
             SOURCE_REPOSITORY=${{ env.SOURCE_REPOSITORY }}
+            BUILD_VERSION=dev
           cache-from: type=gha,scope=arm64
           cache-to: type=gha,mode=max,scope=arm64
 
