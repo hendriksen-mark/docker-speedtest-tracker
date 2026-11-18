@@ -29,13 +29,19 @@ jobs:
 
       - name: Determine latest upstream release tag
         id: release-tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
-          RELEASE_TAG=$(curl -sf "https://api.github.com/repos/${SOURCE_REPOSITORY}/releases/latest" | jq -r .tag_name)
-          if [ -z "${RELEASE_TAG}" ] || [ "${RELEASE_TAG}" = "null" ]; then
-            echo "Failed to resolve latest release tag"
+          AUTH_HEADER="Authorization: Bearer"
+          if ! RELEASE_TAG=$(curl --fail --silent --show-error --retry 3 \
+            -H "${AUTH_HEADER} ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${SOURCE_REPOSITORY}/releases/latest" | jq -er '.tag_name | strings | select(length > 0)'); then
+            echo "Failed to resolve latest release tag for ${SOURCE_REPOSITORY}" >&2
             exit 1
           fi
-          echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+          echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
           echo "Using release tag: ${RELEASE_TAG}"
 
       - name: Set up Docker Buildx
